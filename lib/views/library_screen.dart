@@ -4,6 +4,7 @@ import '../widgets/add_button_functions.dart'; //
 class LibraryScreen extends StatefulWidget {
   final Function(String) onAddFolder;
 
+
   const LibraryScreen({Key? key, required this.onAddFolder}) : super(key: key);
 
   @override

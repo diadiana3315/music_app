@@ -15,6 +15,7 @@ class CustomBottomNavBar extends StatefulWidget {
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   int _currentIndex = 0;
 
+
   final List<Widget> _screens = [
     LibraryScreen(onAddFolder: (String ) {  },),
     PerformanceScreen(),
