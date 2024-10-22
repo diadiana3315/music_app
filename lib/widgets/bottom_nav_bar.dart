@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/views/home_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/library_model.dart';
+import '../views/home_screen.dart';
 import '../views/library_screen.dart';
 import '../views/performance_mode.dart';
 import '../views/profile_screen.dart';
 import 'add_button_functions.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
-  const CustomBottomNavBar({super.key});
-
   @override
   _CustomBottomNavBarState createState() => _CustomBottomNavBarState();
 }
@@ -15,9 +16,8 @@ class CustomBottomNavBar extends StatefulWidget {
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   int _currentIndex = 0;
 
-
   final List<Widget> _screens = [
-    LibraryScreen(onAddFolder: (String ) {  },),
+    LibraryScreen(),
     PerformanceScreen(),
     Container(),
     HomeScreen(),
@@ -25,89 +25,52 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   ];
 
   void _onItemTapped(int index) {
-    if (index == 2) {
-      _showAddOptions(context);
-    } else {
-      setState(() {
-        _currentIndex = index;
-      });
-    }
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
-  void _showAddOptions (BuildContext context) {
-    if (_currentIndex == 0) {
+
+    void _showAddOptionsModal(BuildContext context) {
+      final libraryModel = Provider.of<LibraryModel>(context, listen: false);
+
       showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return Wrap(
-            children: [
+            children: <Widget>[
               ListTile(
-                leading: Icon(Icons.create_new_folder),
-                title: Text('Add Folder'),
+                leading: Icon(Icons.folder),
+                title: Text('Create Folder'),
                 onTap: () {
-                  // TO DO
+                  Navigator.of(context).pop(); // Close modal
                   AddFunctions.addFolder(context, (folderName) {
-
+                    libraryModel.addFolder(folderName);
                   });
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.add_a_photo_rounded),
-                title: Text('Take a Photo'),
-                onTap: () {
-                  AddFunctions.takePhoto(context);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Add from Images'),
-                onTap: () {
-                  AddFunctions.addFromImages(context);
-                  Navigator.pop(context);
                 },
               ),
               ListTile(
                 leading: Icon(Icons.picture_as_pdf),
                 title: Text('Add PDF'),
                 onTap: () {
-                  AddFunctions.addPDF(context);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Wrap(
-            children: [
-              ListTile(
-                leading: Icon(Icons.add_a_photo_rounded),
-                title: Text('Take a Photo'),
-                onTap: () {
-                  AddFunctions.takePhoto(context);
-                  Navigator.pop(context);
+                  Navigator.of(context).pop(); // Close modal
+                  // Implement Add PDF logic
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Add from Images'),
+                leading: Icon(Icons.camera_alt),
+                title: Text('Take Image'),
                 onTap: () {
-                  AddFunctions.addFromImages(context);
-                  Navigator.pop(context);
+                  Navigator.of(context).pop(); // Close modal
+                  // Implement Take Image logic
                 },
               ),
               ListTile(
-                leading: Icon(Icons.picture_as_pdf),
-                title: Text('Add PDF'),
+                leading: Icon(Icons.photo),
+                title: Text('Add Image'),
                 onTap: () {
-                  AddFunctions.addPDF(context);
-                  Navigator.pop(context);
+                  Navigator.of(context).pop(); // Close modal
+                  // Implement Add Image logic
                 },
               ),
             ],
@@ -115,49 +78,49 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         },
       );
     }
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        body: _screens[_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: _onItemTapped,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.library_music),
+              label: "Library",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.radio_button_off),
+              label: "Performance Mode",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(null),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: "Profile",
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // _onItemTapped(2); // Show the add options dialog
+            _showAddOptionsModal(
+                context); // Show the modal when the + button is pressed
+          },
+          child: Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      );
+    }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_music),
-            label: "Library",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.radio_button_off),
-            label: "Performance Mode",
-           ),
-          BottomNavigationBarItem(
-            icon: Icon(null),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: "Profile",
-          ),
-        ],
-        currentIndex: _currentIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-      ),
-      floatingActionButton: FloatingActionButton(
-      onPressed: () {
-      _showAddOptions(context); // Show add options
-      },
-      child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked, // Center docked
-    );
-  }
-}
 

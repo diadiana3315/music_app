@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/views/library_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,7 +6,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Home")),
+      appBar: AppBar(title: const Text("Home")),
     );
     //   body: Center(
     //     child: ElevatedButton(

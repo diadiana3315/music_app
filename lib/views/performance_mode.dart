@@ -7,7 +7,7 @@ class PerformanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Performance"),
+        title: const Text("Performance"),
 
       ),
     );

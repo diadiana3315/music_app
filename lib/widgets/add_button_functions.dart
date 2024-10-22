@@ -1,38 +1,32 @@
 import 'package:flutter/material.dart';
 
 class AddFunctions {
-  static void addFolder(BuildContext context, Function(String) onAddFolder) {
-    String folderName = '';
+  static void addFolder(BuildContext context, Function(String) onFolderAdded) {
+    TextEditingController _folderNameController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Create New Folder'),
+          title: Text('New Folder'),
           content: TextField(
-            onChanged: (value) {
-              folderName = value;
-            },
+            controller: _folderNameController,
             decoration: InputDecoration(hintText: "Enter folder name"),
           ),
           actions: [
             TextButton(
               child: Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Close dialog
               },
             ),
-            TextButton(
-              child: Text('Create'),
+            ElevatedButton(
+              child: Text('Save'),
               onPressed: () {
+                String folderName = _folderNameController.text;
                 if (folderName.isNotEmpty) {
-                  onAddFolder(folderName); // Use the callback to add the folder
-                  Navigator.of(context).pop(); // Close the dialog
-                } else {
-                  // Show a snackbar if the folder name is empty
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Folder name cannot be empty!')),
-                  );
+                  onFolderAdded(folderName); // Call the callback
+                  Navigator.of(context).pop(); // Close dialog
                 }
               },
             ),
@@ -41,17 +35,4 @@ class AddFunctions {
       },
     );
   }
-
-  static void takePhoto(BuildContext context) {
-
-  }
-
-  static void addFromImages(BuildContext context) {
-
-  }
-
-  static void addPDF(BuildContext context) {
-
-  }
-
 }
