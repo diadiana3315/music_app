@@ -9,4 +9,9 @@ class LibraryModel extends ChangeNotifier {
     _folders.add(folderName);
     notifyListeners();
   }
+
+  void deleteFolder(String folderName) {
+    _folders.remove(folderName);
+    notifyListeners();
+  }
 }
